@@ -1,5 +1,6 @@
 #include <iostream>
 #include <random>
+#include <thread>
 #include "TrafficLight.h"
 
 /* Implementation of class "MessageQueue" */
@@ -44,6 +45,7 @@ TrafficLightPhase TrafficLight::getCurrentPhase()
 void TrafficLight::simulate()
 {
     // FP.2b : Finally, the private method „cycleThroughPhases“ should be started in a thread when the public method „simulate“ is called. To do this, use the thread queue in the base class. 
+    threads.emplace_back(std::thread(&TrafficLight::cycleThroughPhases, this));
 }
 
 // virtual function which is executed in a thread
@@ -53,4 +55,36 @@ void TrafficLight::cycleThroughPhases()
     // and toggles the current phase of the traffic light between red and green and sends an update method 
     // to the message queue using move semantics. The cycle duration should be a random value between 4 and 6 seconds. 
     // Also, the while-loop should use std::this_thread::sleep_for to wait 1ms between two cycles. 
+
+    int numberOfCycles = 0;
+    std::chrono::time_point<std::chrono::system_clock> lastUpdate = std::chrono::system_clock::now();
+    double cycleDuration = rand() % 4 - 6;
+
+    // Create infinite loop
+    while(true)
+    {
+        long timeSinceLastUpdate = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - lastUpdate).count();
+
+        // Continue with the next loop if the cycleDuration time has not passed yet
+        if (timeSinceLastUpdate <= cycleDuration)
+            continue;
+
+        // Check if the cycle counter is a multiple of 2
+        if(numberOfCycles % 2)
+        {
+            // Change the color of the light to red
+            _currentPhase = TrafficLightPhase::red;
+            // Sleep the thread each two cycles
+            std::this_thread::sleep_for(std::chrono::milliseconds(1));
+        } else {
+            // Change the color of the light to green
+            _currentPhase = TrafficLightPhase::green;
+        }
+
+        // Update values for the next loop
+        cycleDuration = rand() % 4 - 6;
+        lastUpdate = std::chrono::system_clock::now();
+        numberOfCycles++;
+    }
+
 }
