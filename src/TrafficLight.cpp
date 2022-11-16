@@ -88,7 +88,7 @@ void TrafficLight::cycleThroughPhases()
 
     int numberOfCycles = 0;
     std::chrono::time_point<std::chrono::system_clock> lastUpdate = std::chrono::system_clock::now();
-    double cycleDuration = rand() % 4 - 6;
+    double cycleDuration = rand() % 3 + 4;
 
     // Create infinite loop
     while(true)
@@ -114,7 +114,7 @@ void TrafficLight::cycleThroughPhases()
             _mesageQueue.send(std::move(_currentPhase));
 
             // Update values for the next loop
-            cycleDuration = rand() % 4 - 6;
+            cycleDuration = rand() % 3 + 4;
             lastUpdate = std::chrono::system_clock::now();
             numberOfCycles++;
         }
