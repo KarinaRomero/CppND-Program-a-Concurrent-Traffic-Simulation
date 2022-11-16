@@ -96,28 +96,28 @@ void TrafficLight::cycleThroughPhases()
         long timeSinceLastUpdate = std::chrono::duration_cast<std::chrono::seconds>(std::chrono::system_clock::now() - lastUpdate).count();
 
         // Continue with the next loop if the cycleDuration time has not passed yet
-        if (timeSinceLastUpdate <= cycleDuration)
-            continue;
-
-        // Check if the cycle counter is a multiple of 2
-        if(numberOfCycles % 2)
+        if (timeSinceLastUpdate >= cycleDuration)
         {
-            // Change the color of the light to red
-            _currentPhase = TrafficLightPhase::red;
-            // Sleep the thread each two cycles
-            std::this_thread::sleep_for(std::chrono::milliseconds(1));
-        } else {
-            // Change the color of the light to green
-            _currentPhase = TrafficLightPhase::green;
+            // Check if the cycle counter is a multiple of 2
+            if(numberOfCycles % 2)
+            {
+                // Change the color of the light to red
+                _currentPhase = TrafficLightPhase::red;
+                // Sleep the thread each two cycles
+                std::this_thread::sleep_for(std::chrono::milliseconds(1));
+            } else {
+                // Change the color of the light to green
+                _currentPhase = TrafficLightPhase::green;
+            }
+
+            // Send current TrafficLightPhase state
+            _mesageQueue.send(std::move(_currentPhase));
+
+            // Update values for the next loop
+            cycleDuration = rand() % 4 - 6;
+            lastUpdate = std::chrono::system_clock::now();
+            numberOfCycles++;
         }
-
-        // Send current TrafficLightPhase state
-        _mesageQueue.send(std::move(_currentPhase));
-
-        // Update values for the next loop
-        cycleDuration = rand() % 4 - 6;
-        lastUpdate = std::chrono::system_clock::now();
-        numberOfCycles++;
     }
 
 }
