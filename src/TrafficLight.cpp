@@ -93,7 +93,7 @@ void TrafficLight::cycleThroughPhases()
     // Create infinite loop
     while(true)
     {
-        long timeSinceLastUpdate = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - lastUpdate).count();
+        long timeSinceLastUpdate = std::chrono::duration_cast<std::chrono::seconds>(std::chrono::system_clock::now() - lastUpdate).count();
 
         // Continue with the next loop if the cycleDuration time has not passed yet
         if (timeSinceLastUpdate <= cycleDuration)
