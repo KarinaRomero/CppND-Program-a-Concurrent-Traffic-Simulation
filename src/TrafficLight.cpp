@@ -121,8 +121,12 @@ void TrafficLight::cycleThroughPhases()
             cycleDuration = rand() % 3 + 4;
             // Set the new last update value to now
             lastUpdate = std::chrono::system_clock::now();
+
             // Increment the number of cycles
-            numberOfCycles++;
+            if(numberOfCycles == 2)
+                numberOfCycles = 1;
+            else
+                numberOfCycles++;
         }
     }
 
