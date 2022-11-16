@@ -75,6 +75,8 @@ TrafficLightPhase TrafficLight::getCurrentPhase()
 void TrafficLight::simulate()
 {
     // FP.2b : Finally, the private method „cycleThroughPhases“ should be started in a thread when the public method „simulate“ is called. To do this, use the thread queue in the base class. 
+    
+    // Using emplace back add a new thread to run cycleThroughPhases whit this context 
     threads.emplace_back(std::thread(&TrafficLight::cycleThroughPhases, this));
 }
 
@@ -88,6 +90,7 @@ void TrafficLight::cycleThroughPhases()
 
     int numberOfCycles = 0;
     std::chrono::time_point<std::chrono::system_clock> lastUpdate = std::chrono::system_clock::now();
+    // Generate random value betwen 4 to 6 
     double cycleDuration = rand() % 3 + 4;
 
     // Create infinite loop
@@ -103,6 +106,7 @@ void TrafficLight::cycleThroughPhases()
             {
                 // Change the color of the light to red
                 _currentPhase = TrafficLightPhase::red;
+
                 // Sleep the thread each two cycles
                 std::this_thread::sleep_for(std::chrono::milliseconds(1));
             } else {
@@ -110,12 +114,14 @@ void TrafficLight::cycleThroughPhases()
                 _currentPhase = TrafficLightPhase::green;
             }
 
-            // Send current TrafficLightPhase state
+            // Send current TrafficLightPhase state, this line corresponds to the FP.4 task
             _mesageQueue.send(std::move(_currentPhase));
 
-            // Update values for the next loop
+            // Generate a new random value betwen 4 to 6 
             cycleDuration = rand() % 3 + 4;
+            // Set the new last update value to now
             lastUpdate = std::chrono::system_clock::now();
+            // Increment the number of cycles
             numberOfCycles++;
         }
     }

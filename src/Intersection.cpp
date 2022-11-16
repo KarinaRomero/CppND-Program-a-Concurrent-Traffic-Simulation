@@ -87,8 +87,10 @@ void Intersection::addVehicleToQueue(std::shared_ptr<Vehicle> vehicle)
     std::cout << "Intersection #" << _id << ": Vehicle #" << vehicle->getID() << " is granted entry." << std::endl;
     
     // FP.6b : use the methods TrafficLight::getCurrentPhase and TrafficLight::waitForGreen to block the execution until the traffic light turns green.
-    if (trafficLightIsGreen())
+    // Verify if currently the trafic light is green
+    if (!trafficLightIsGreen())
     {
+        // If not, wait until the light turns to red
         _trafficLight.waitForGreen();
     }
     
