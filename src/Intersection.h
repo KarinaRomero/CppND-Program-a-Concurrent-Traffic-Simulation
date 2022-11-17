@@ -32,7 +32,7 @@ private:
 class Intersection : public TrafficObject
 {
 public:
-    // constructor / desctructor
+    // constructor / destructor
     Intersection();
 
     // getters / setters

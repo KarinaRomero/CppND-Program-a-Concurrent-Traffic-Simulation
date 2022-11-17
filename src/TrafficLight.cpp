@@ -61,7 +61,7 @@ void TrafficLight::waitForGreen()
     while (true)
     {
         // Get the message and check if its green light
-        if(_mesageQueue.receive() == TrafficLightPhase::green)
+        if(_messageQueue.receive() == TrafficLightPhase::green)
             return;
     }
     
@@ -88,7 +88,7 @@ void TrafficLight::cycleThroughPhases()
     // to the message queue using move semantics. The cycle duration should be a random value between 4 and 6 seconds. 
     // Also, the while-loop should use std::this_thread::sleep_for to wait 1ms between two cycles. 
 
-    int numberOfCycles = 0;
+    int numberOfCycles = 1;
     std::chrono::time_point<std::chrono::system_clock> lastUpdate = std::chrono::system_clock::now();
     // Generate random value betwen 4 to 6 
     double cycleDuration = rand() % 3 + 4;
@@ -115,9 +115,9 @@ void TrafficLight::cycleThroughPhases()
             }
 
             // Send current TrafficLightPhase state, this line corresponds to the FP.4 task
-            _mesageQueue.send(std::move(_currentPhase));
+            _messageQueue.send(std::move(_currentPhase));
 
-            // Generate a new random value betwen 4 to 6 
+            // Generate a new random value between  4 to 6 
             cycleDuration = rand() % 3 + 4;
             // Set the new last update value to now
             lastUpdate = std::chrono::system_clock::now();
